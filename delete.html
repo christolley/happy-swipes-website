@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete My Data - HappySwipes</title>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background-color: #FFF9E6;
+            line-height: 1.6;
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            margin: 40px auto;
+        }
+
+        .logo {
+            font-size: 3em;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #F5A623;
+            margin-bottom: 10px;
+            font-size: 2em;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #F5A623;
+        }
+
+        .helper-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #F5A623;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #E09612;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background: #ddd;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #F5A623;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: #F5A623;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            color: #856404;
+            font-size: 14px;
+        }
+
+        .warning-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        footer {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #F5A623;
+            text-align: center;
+            color: #666;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .footer-links {
+            margin: 20px 0;
+        }
+
+        .footer-links a {
+            color: #F5A623;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .subtitle {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">☀️</div>
+        <h1>Delete My Data</h1>
+        <p class="subtitle">Request deletion of your HappySwipes account and all associated data.</p>
+
+        <div class="warning-box">
+            <strong>⚠️ This action cannot be undone</strong>
+            All your account data will be permanently deleted within 30 days of verification.
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <form id="deleteForm">
+            <div class="form-group">
+                <label for="username">Username *</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    required 
+                    placeholder="Enter your username"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    required 
+                    placeholder="Email associated with your account"
+                >
+                <p class="helper-text">We'll send a verification link to this email to confirm your identity.</p>
+            </div>
+
+            <div class="form-group">
+                <label for="reason">Reason for deletion (optional)</label>
+                <input 
+                    type="text" 
+                    id="reason" 
+                    name="reason" 
+                    placeholder="Help us improve (optional)"
+                >
+            </div>
+
+            <div id="spinner" class="spinner"></div>
+            
+            <button type="submit" id="submitBtn">Submit Deletion Request</button>
+        </form>
+
+        <div class="back-link">
+            <a href="https://happyswipes.com">← Back to HappySwipes</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="https://happyswipes.com/privacy.html">Privacy Policy</a>
+            <a href="https://happyswipes.com/terms.html">Terms & Conditions</a>
+        </div>
+        <p><strong>Contact:</strong> <a href="mailto:happyswipesapp@gmail.com" style="color: #F5A623; text-decoration: none;">happyswipesapp@gmail.com</a></p>
+        <p style="margin-top: 20px;">© 2025 Happy Swipes. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Get this from: https://dashboard.emailjs.com/admin/account
+        emailjs.init('DHYU5-05dPTtTuAXp');
+
+        const form = document.getElementById('deleteForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const spinner = document.getElementById('spinner');
+        const messageDiv = document.getElementById('message');
+
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type} show`;
+            
+            // Auto-hide after 10 seconds
+            setTimeout(() => {
+                messageDiv.classList.remove('show');
+            }, 10000);
+        }
+
+        function setLoading(isLoading) {
+            if (isLoading) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Sending...';
+                spinner.style.display = 'block';
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Deletion Request';
+                spinner.style.display = 'none';
+            }
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const reason = document.getElementById('reason').value.trim();
+
+            if (!username || !email) {
+                showMessage('Please fill in all required fields.', 'error');
+                return;
+            }
+
+            setLoading(true);
+
+            // Template parameters to send
+            const templateParams = {
+                username: username,
+                email: email,
+                reason: reason || 'No reason provided',
+                request_date: new Date().toLocaleString()
+            };
+
+            // Send email via EmailJS
+            emailjs.send('service_cjh2kjm', 'template_p3v65ei', templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    showMessage(
+                        '✓ Request submitted successfully! Please check your email for a verification link. We will process your deletion request within 30 days after verification.',
+                        'success'
+                    );
+                    form.reset();
+                }, function(error) {
+                    console.error('FAILED...', error);
+                    showMessage(
+                        '✗ Failed to submit request. Please try again or email us directly at support@happyswipes.com',
+                        'error'
+                    );
+                })
+                .finally(function() {
+                    setLoading(false);
+                });
+        });
+    </script>
+</body>
+</html>
